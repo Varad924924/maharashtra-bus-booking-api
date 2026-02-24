@@ -28,3 +28,20 @@ app.include_router(bookings.router, prefix="/bookings", tags=["Bookings"])
 @app.get("/")
 def home():
     return {"message": "Welcome to the Bus Booking API"}
+
+
+from app.database import SessionLocal
+from app.models import User
+
+@app.get("/upgrade-admin/{email}")
+def upgrade_admin(email: str):
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.email == email).first()
+        if user:
+            user.role = "admin"
+            db.commit()
+            return {"message": f"🎉 SUCCESS! {email} is now an ADMIN!"}
+        return {"error": "User not found. Make sure you signed up on the frontend first!"}
+    finally:
+        db.close()

@@ -1,4 +1,4 @@
-const API_URL = "http://192.168.1.37:8000";
+const API_URL = "https://maharashtra-bus-booking-api.onrender.com";
 
 // --- Toggle Between Login and Signup Forms ---
 function toggleAuth(type) {
