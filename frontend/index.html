@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Booking System</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Modern Seat Grid Styles */
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+            justify-items: center;
+        }
+        .seat {
+            width: 55px;
+            height: 55px;
+            background-color: #ecf0f1;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px 8px 4px 4px; /* Looks like a bus seat! */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 -4px 0 rgba(0,0,0,0.1);
+        }
+        .seat:hover { background-color: #d5dbdb; transform: translateY(-2px); }
+        .seat.selected { background-color: var(--secondary); color: white; border-color: #2980b9; box-shadow: inset 0 -4px 0 #2980b9; }
+        .seat.booked { background-color: var(--admin-red); color: white; border-color: #a53125; cursor: not-allowed; box-shadow: inset 0 -4px 0 #a53125; opacity: 0.8; }
+
+        .bus-card {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #fafbfc;
+            transition: 0.3s;
+        }
+        .bus-card:hover { border-color: var(--secondary); box-shadow: 0 4px 10px rgba(52, 152, 219, 0.1); }
+    </style>
+</head>
+<body>
+    <div style="background-color: var(--primary); color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <h2 style="margin: 0; font-weight: 700;">🚌 Maharashtra Travels</h2>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span id="user-greeting" style="font-weight: 500;"></span>
+            <button onclick="viewMyBookings()" style="width: auto; padding: 8px 15px; background: rgba(255,255,255,0.2); color: white; border-radius: 20px;">🎫 My Bookings</button>
+            <button onclick="logout()" style="width: auto; padding: 8px 20px; background: var(--admin-red); color: white; border-radius: 20px;">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="admin-grid"> <div>
+                <div class="card" style="margin-bottom: 20px;">
+                    <h2>🔍 Find Your Bus</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="source" placeholder="From (e.g. Pune)" style="margin-bottom: 0;">
+                        <input type="text" id="destination" placeholder="To (e.g. Mumbai)" style="margin-bottom: 0;">
+                        <input type="date" id="date" style="margin-bottom: 0;">
+                    </div>
+                    <button onclick="searchBuses()" class="primary" style="margin-top: 15px;">Search Buses</button>
+                </div>
+
+                <div class="card" id="results-card" style="display: none;">
+                    <h2>🚍 Available Buses</h2>
+                    <div id="bus-list"></div>
+                </div>
+            </div>
+
+            <div class="card" id="booking-section" style="display: none;">
+                <h2>💺 Select Your Seat</h2>
+                <h3 id="selected-bus-info" style="color: var(--secondary); margin-bottom: 10px; font-size: 16px;"></h3>
+
+                <div id="seat-map" class="seat-grid"></div>
+
+                <form id="booking-form" style="margin-top: 25px; display: none; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                    <h3 style="margin-bottom: 15px; color: var(--primary);">Passenger Details</h3>
+                    <input type="hidden" id="book-bus-id">
+                    <input type="hidden" id="book-seat-number">
+
+                    <input type="text" id="passenger-name" placeholder="Full Name" required>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="passenger-age" placeholder="Age" required style="width: 50%;">
+                        <select id="passenger-gender" required style="width: 50%;">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <input type="text" id="passenger-adhaar" placeholder="Adhaar Number" required>
+                    <input type="text" id="passenger-mobile" placeholder="Mobile Number" required>
+                    <select id="payment-mode" required>
+                        <option value="">Select Payment Mode</option>
+                        <option value="Online">Online / UPI</option>
+                        <option value="Cash">Cash</option>
+                    </select>
+
+                    <button type="submit" style="background: var(--success);">Confirm Booking (₹<span id="display-price">0</span>)</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

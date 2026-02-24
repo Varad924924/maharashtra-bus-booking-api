@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - Bus Booking System</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .ticket-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .ticket-card {
+            background: white;
+            border-left: 5px solid #2ecc71;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ticket-info h3 { margin: 0 0 10px 0; color: #2c3e50; }
+        .ticket-info p { margin: 5px 0; color: #555; }
+        .seat-badge {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50%;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div style="background-color: #2c3e50; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="margin: 0;">🚌 My Digital Tickets</h2>
+        <div>
+            <button onclick="window.location.href='index.html'" style="padding: 5px 10px; margin-right: 10px; cursor: pointer;">Back to Search</button>
+            <button onclick="logout()" style="padding: 5px 10px; background: #e74c3c; color: white; border: none; cursor: pointer;">Logout</button>
+        </div>
+    </div>
+
+    <div class="ticket-container" id="tickets-list">
+        <h3 style="text-align: center;">Loading your tickets...</h3>
+    </div>
+
+    <script>
+        // 1. Check if user is logged in
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = "login.html";
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        // 2. Fetch only THIS user's bookings securely
+        async function fetchMyBookings() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/bookings/my-bookings', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}` // The digital VIP pass!
+                    }
+                });
+
+                if (response.status === 401) {
+                    alert("Session expired. Please log in again.");
+                    logout();
+                    return;
+                }
+
+                const bookings = await response.json();
+                const container = document.getElementById('tickets-list');
+                container.innerHTML = ''; // Clear loading text
+
+                if (bookings.length === 0) {
+                    container.innerHTML = '<h3 style="text-align: center;">You have no bookings yet!</h3>';
+                    return;
+                }
+
+                // 3. Display each ticket
+                bookings.forEach(ticket => {
+                    const ticketCard = document.createElement('div');
+                    ticketCard.className = 'ticket-card';
+                    ticketCard.innerHTML = `
+                        <div class="ticket-info">
+                            <h3>Passenger: ${ticket.passenger_name}</h3>
+                            <p><strong>Bus ID:</strong> ${ticket.bus_id}</p>
+                            <p><strong>Mobile:</strong> ${ticket.mobile_no} | <strong>Gender:</strong> ${ticket.gender}</p>
+                            <p><strong>Amount Paid:</strong> ₹${ticket.total_amount} (${ticket.payment_mode})</p>
+                        </div>
+                        <div class="seat-badge">
+                            Seat<br>${ticket.seat_number}
+                        </div>
+                    `;
+                    container.appendChild(ticketCard);
+                });
+            } catch (error) {
+                console.error("Error fetching tickets:", error);
+                document.getElementById('tickets-list').innerHTML = '<h3 style="color: red; text-align: center;">Error loading tickets.</h3>';
+            }
+        }
+
+        // Load tickets as soon as the page opens
+        fetchMyBookings();
+    </script>
+</body>
+</html>

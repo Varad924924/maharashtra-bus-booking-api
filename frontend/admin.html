@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Bus Booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="admin-layout">
+
+        <nav class="sidebar">
+            <div class="sidebar-header">🛡️ ADMIN PANEL</div>
+            <ul class="sidebar-menu">
+                <li class="active-tab" onclick="switchSection('dashboard', this)">📊 Dashboard</li>
+                <li onclick="switchSection('add-bus', this)">➕ Add New Bus</li>
+                <li onclick="switchSection('view-buses', this)">🚌 Manage Buses</li>
+                <li onclick="switchSection('view-routes', this)">🗺️ View Routes</li>
+                <li onclick="switchSection('view-bookings', this)">🎫 Booked Tickets</li>
+            </ul>
+            <div class="sidebar-footer" onclick="logout()">🚪 Logout</div>
+        </nav>
+
+        <main class="main-content">
+            <div class="top-nav">
+                <span id="admin-greeting" style="font-weight: 600; color: #2c3e50;">Loading...</span>
+            </div>
+
+            <div id="dashboard" class="admin-section active-section">
+                <div class="card">
+                    <h2>Welcome to the Command Center</h2>
+                    <p>Select an option from the sidebar to manage your Bus Booking System.</p>
+                </div>
+            </div>
+
+            <div id="add-bus" class="admin-section">
+                <div class="card form-section" style="max-width: 600px; margin: 0 auto;">
+                    <h2>Publish a New Bus Route</h2>
+                    <form id="add-bus-form">
+                        <input type="text" id="bus-number" placeholder="Bus Number (e.g., MH-12-1234)" required>
+                        <input type="text" id="operator" placeholder="Operator Name" required>
+                        <input type="text" id="source" placeholder="Source City" required>
+                        <input type="text" id="destination" placeholder="Destination City" required>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="date" id="date" required style="width: 50%;">
+                            <input type="time" id="departure-time" required style="width: 50%;">
+                        </div>
+                        <input type="number" id="price" placeholder="Ticket Price (₹)" required>
+                        <button type="submit" class="primary">Add Bus to Database</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="view-buses" class="admin-section">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h2 id="manage-buses-title" style="margin: 0; padding: 0; border: none;">Active Fleet</h2>
+                        <button onclick="fetchAllBuses()" style="width: auto; padding: 8px 15px;">🔄 Refresh Buses</button>
+                    </div>
+                    <table id="buses-table">
+                        <thead>
+                            <tr>
+                                <th>Bus #</th>
+                                <th>Operator</th>
+                                <th>Route</th>
+                                <th>Date & Time</th>
+                                <th>Price</th>
+                                <th>Action</th> </tr>
+                        </thead>
+                        <tbody id="buses-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="view-routes" class="admin-section">
+                <div class="card">
+                    <h2>Available City Routes</h2>
+                    <p>This section will analyze all active buses and display the unique Source and Destination pairs.</p>
+                    <ul id="routes-list" style="margin-top: 15px; padding-left: 20px; line-height: 2;"></ul>
+                </div>
+            </div>
+
+            <div id="view-bookings" class="admin-section">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h2 style="margin: 0; padding: 0; border: none;">System Bookings</h2>
+                        <button onclick="fetchAllBookings()" style="width: auto; padding: 8px 15px;">🔄 Refresh Tickets</button>
+                    </div>
+                    <table id="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>Txn ID</th>
+                                <th>Bus Info</th>
+                                <th>Passenger</th>
+                                <th>Seat</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

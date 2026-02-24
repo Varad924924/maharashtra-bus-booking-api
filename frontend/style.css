@@ -1,0 +1,298 @@
+/* --- 1. PREMIUM FONTS & COLOR PALETTE --- */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    /* Modern Tailwind-inspired Colors */
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --primary: #4f46e5;        /* Deep Indigo */
+    --primary-light: #6366f1;  /* Bright Indigo */
+    --secondary: #0ea5e9;      /* Sky Blue */
+    --danger: #ef4444;         /* Rose Red */
+    --danger-hover: #dc2626;
+    --success: #10b981;        /* Emerald Green */
+    --text-main: #0f172a;      /* Slate 900 */
+    --text-muted: #64748b;     /* Slate 500 */
+    --border-color: #e2e8f0;   /* Slate 200 */
+
+    /* Sidebar Deep Theme */
+    --sidebar-top: #0f172a;
+    --sidebar-bottom: #1e293b;
+    --sidebar-hover: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased; /* Makes text look sharper */
+}
+
+/* --- 2. GORGEOUS CARDS WITH FLOATING HOVER --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+@media (min-width: 1000px) {
+    .admin-grid { grid-template-columns: 380px 1fr; }
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 20px; /* Rounder, modern corners */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    transform: translateY(-4px); /* Floats up slightly */
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.card h2 {
+    margin-bottom: 25px;
+    color: var(--text-main);
+    font-weight: 700;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- 3. PREMIUM INPUTS --- */
+input, select {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-main);
+    background-color: #f8fafc;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15); /* Glowing focus ring */
+}
+
+/* --- 4. GRADIENT BUTTONS --- */
+button {
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+button:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+}
+
+button:active { transform: translateY(1px); }
+
+/* Custom Button Colors */
+button.danger {
+    background: linear-gradient(135deg, var(--danger), #f43f5e);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+button.danger:hover { box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4); }
+
+/* --- 5. SLEEK DATA TABLES --- */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 10px;
+}
+
+th {
+    background-color: #f1f5f9;
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 16px;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+}
+
+th:first-child { border-top-left-radius: 12px; }
+th:last-child { border-top-right-radius: 12px; }
+
+td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+tr:hover td { background-color: #f8fafc; }
+tr:last-child td { border-bottom: none; }
+
+/* --- 6. DARK MODE SIDEBAR (Admin) --- */
+.admin-layout { display: flex; height: 100vh; overflow: hidden; }
+
+.sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, var(--sidebar-top) 0%, var(--sidebar-bottom) 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+    z-index: 20;
+}
+
+.sidebar-header {
+    padding: 30px 20px;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebar-menu { list-style: none; flex-grow: 1; padding: 20px 0; }
+
+.sidebar-menu li {
+    padding: 16px 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 15px;
+    font-weight: 600;
+    color: #cbd5e1;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-menu li:hover {
+    background: var(--sidebar-hover);
+    color: white;
+    padding-left: 35px;
+}
+
+.sidebar-menu li.active-tab {
+    background: rgba(79, 70, 229, 0.2);
+    color: white;
+    border-left: 4px solid var(--primary-light);
+}
+
+.main-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    background: var(--bg-color);
+}
+
+/* Glassmorphism Top Nav */
+.top-nav {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.admin-section { padding: 40px; display: none; animation: slideUpFade 0.4s ease forwards; }
+.admin-section.active-section { display: block; }
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 7. BEAUTIFUL BUS SEATS (User Page) --- */
+.seat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.seat {
+    width: 60px;
+    height: 60px;
+    background: #f1f5f9;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px 12px 6px 6px; /* High-end bus seat look */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--text-muted);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 -6px 0 rgba(0,0,0,0.05);
+}
+
+.seat:hover:not(.booked) {
+    background: #e2e8f0;
+    transform: translateY(-4px);
+    box-shadow: inset 0 -6px 0 rgba(0,0,0,0.1), 0 8px 15px rgba(0,0,0,0.05);
+}
+
+.seat.selected {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    border-color: var(--primary);
+    box-shadow: inset 0 -6px 0 rgba(0,0,0,0.2), 0 8px 15px rgba(79, 70, 229, 0.3);
+    transform: translateY(-2px);
+}
+
+.seat.booked {
+    background: #fecdd3;
+    color: #be123c;
+    border-color: #fda4af;
+    cursor: not-allowed;
+    box-shadow: inset 0 -6px 0 rgba(0,0,0,0.05);
+    opacity: 0.7;
+}
+
+/* Auth Container specific */
+.auth-container {
+    max-width: 420px;
+    margin: 80px auto;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255,255,255,0.5);
+}
