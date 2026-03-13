@@ -11,45 +11,57 @@
             flex-direction: column;
             gap: 15px;
             max-width: 800px;
-            margin: 20px auto;
+            margin: 40px auto;
+            padding: 0 20px;
         }
         .ticket-card {
-            background: white;
-            border-left: 5px solid #2ecc71;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            border-left: 6px solid var(--primary);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: transform 0.3s ease;
         }
-        .ticket-info h3 { margin: 0 0 10px 0; color: #2c3e50; }
-        .ticket-info p { margin: 5px 0; color: #555; }
+        .ticket-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
+        .ticket-info h3 { margin: 0 0 10px 0; color: var(--text-main); font-size: 1.3rem;}
+        .ticket-info p { margin: 5px 0; color: var(--text-muted); font-size: 0.95rem;}
         .seat-badge {
-            background: #2c3e50;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
-            padding: 15px 20px;
-            border-radius: 50%;
+            padding: 15px 25px;
+            border-radius: 12px;
             font-size: 1.2em;
             font-weight: bold;
             text-align: center;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
     </style>
 </head>
 <body>
-    <div style="background-color: #2c3e50; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
-        <h2 style="margin: 0;">🚌 My Digital Tickets</h2>
-        <div>
-            <button onclick="window.location.href='index.html'" style="padding: 5px 10px; margin-right: 10px; cursor: pointer;">Back to Search</button>
-            <button onclick="logout()" style="padding: 5px 10px; background: #e74c3c; color: white; border: none; cursor: pointer;">Logout</button>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2047080723561705"
+     crossorigin="anonymous"></script>
+    <div class="top-nav" style="justify-content: space-between;">
+        <h2 style="margin: 0; font-weight: 700; color: var(--primary);">🚌 My Digital Tickets</h2>
+        <div style="display: flex; gap: 15px;">
+            <button onclick="window.location.href='index.html'" style="width: auto; padding: 8px 20px; background: var(--secondary);">Back to Search</button>
+            <button onclick="logout()" class="danger" style="width: auto; padding: 8px 20px;">Logout</button>
         </div>
     </div>
 
     <div class="ticket-container" id="tickets-list">
-        <h3 style="text-align: center;">Loading your tickets...</h3>
+        <h3 style="text-align: center; color: var(--text-muted);">Loading your tickets...</h3>
     </div>
 
     <script>
+        // --- ADD YOUR LIVE CLOUD API URL HERE ---
+        const API_URL = "https://maharashtra-bus-booking-api.onrender.com";
+        //const API_URL = "http://127.0.0.1:8000";
         // 1. Check if user is logged in
         const token = localStorage.getItem('token');
         if (!token) {
@@ -64,14 +76,15 @@
         // 2. Fetch only THIS user's bookings securely
         async function fetchMyBookings() {
             try {
-                const response = await fetch('http://127.0.0.1:8000/bookings/my-bookings', {
+                // FIXED: Now uses the live cloud database!
+                const response = await fetch(`${API_URL}/bookings/my-bookings`, {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}` // The digital VIP pass!
+                        'Authorization': `Bearer ${token}`
                     }
                 });
 
-                if (response.status === 401) {
+                if (response.status === 401 || response.status === 403) {
                     alert("Session expired. Please log in again.");
                     logout();
                     return;
@@ -79,10 +92,10 @@
 
                 const bookings = await response.json();
                 const container = document.getElementById('tickets-list');
-                container.innerHTML = ''; // Clear loading text
+                container.innerHTML = '';
 
                 if (bookings.length === 0) {
-                    container.innerHTML = '<h3 style="text-align: center;">You have no bookings yet!</h3>';
+                    container.innerHTML = '<h3 style="text-align: center; color: var(--text-muted);">You have no bookings yet!</h3>';
                     return;
                 }
 
@@ -95,21 +108,20 @@
                             <h3>Passenger: ${ticket.passenger_name}</h3>
                             <p><strong>Bus ID:</strong> ${ticket.bus_id}</p>
                             <p><strong>Mobile:</strong> ${ticket.mobile_no} | <strong>Gender:</strong> ${ticket.gender}</p>
-                            <p><strong>Amount Paid:</strong> ₹${ticket.total_amount} (${ticket.payment_mode})</p>
+                            <p><strong>Amount Paid:</strong> ₹${ticket.total_amount} <span style="color: var(--success); font-weight: bold;">(${ticket.payment_mode})</span></p>
                         </div>
                         <div class="seat-badge">
-                            Seat<br>${ticket.seat_number}
+                            Seat<br><span style="font-size: 1.4em;">${ticket.seat_number}</span>
                         </div>
                     `;
                     container.appendChild(ticketCard);
                 });
             } catch (error) {
                 console.error("Error fetching tickets:", error);
-                document.getElementById('tickets-list').innerHTML = '<h3 style="color: red; text-align: center;">Error loading tickets.</h3>';
+                document.getElementById('tickets-list').innerHTML = '<h3 style="color: var(--danger); text-align: center;">Error loading tickets.</h3>';
             }
         }
 
-        // Load tickets as soon as the page opens
         fetchMyBookings();
     </script>
 </body>

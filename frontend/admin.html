@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2047080723561705"
+     crossorigin="anonymous"></script>
+
     <div class="admin-layout">
 
         <nav class="sidebar">
@@ -55,6 +59,7 @@
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <h2 id="manage-buses-title" style="margin: 0; padding: 0; border: none;">Active Fleet</h2>
+                        <button onclick="autoGenerateBuses()" style="width: auto; padding: 8px 15px; background: #9b59b6; color: white; border: none; border-radius: 4px; cursor: pointer;">⚡ Auto-Generate 24h Schedule</button>
                         <button onclick="fetchAllBuses()" style="width: auto; padding: 8px 15px;">🔄 Refresh Buses</button>
                     </div>
                     <table id="buses-table">
@@ -71,6 +76,7 @@
                     </table>
                 </div>
             </div>
+
 
             <div id="view-routes" class="admin-section">
                 <div class="card">

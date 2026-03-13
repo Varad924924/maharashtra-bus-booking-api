@@ -1,5 +1,5 @@
 const API_URL = "https://maharashtra-bus-booking-api.onrender.com";
-
+//const API_URL = "http://127.0.0.1:8000";
 // --- 1. STRICT ADMIN SECURITY CHECK ---
 const token = localStorage.getItem('token');
 const userRole = localStorage.getItem('user_role');
@@ -230,5 +230,34 @@ async function deleteBus(busId) {
     } catch (error) {
         console.error('Error deleting bus:', error);
         alert("Server error while trying to delete.");
+    }
+}
+
+// --- AUTO GENERATE 24-HOUR BUS SCHEDULE ---
+async function autoGenerateBuses() {
+    // Double-check before flooding the database
+    if (!confirm("⚡ Are you sure? This will instantly generate dozens of buses for Pune, Mumbai, Nashik, and A.Nagar for the next 24 hours!")) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/buses/auto-generate`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}` // Use the Admin VIP pass
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            alert(data.message);
+            fetchAllBuses(); // Instantly refresh the table to show the new buses!
+        } else {
+            const errorData = await response.json();
+            alert(`Error generating buses: ${errorData.detail}`);
+        }
+    } catch (error) {
+        console.error('Generation error:', error);
+        alert("Server error. Check if the backend is running!");
     }
 }
