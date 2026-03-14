@@ -42,13 +42,13 @@ def delete_expired_buses(db: Session):
 
 # --- ROUTES ---
 
-@router.get("/", response_model=List[schemas.BusResponse])
+@router.get("/", response_model=List[schemas.BusResponse], summary="List all active buses", description="Retrieves a list of all active buses. Past/expired buses are automatically cleaned up before returning.")
 def get_buses(db: Session = Depends(get_db)):
     delete_expired_buses(db)  # <--- Clean up before showing list
     return db.query(models.Bus).all()
 
 
-@router.post("/search", response_model=List[schemas.BusResponse])
+@router.post("/search", response_model=List[schemas.BusResponse], summary="Search available buses", description="Searches for active buses matching the specified source, destination, and date (case-insensitive).")
 def search_buses(search_data: schemas.BusSearch, db: Session = Depends(get_db)):
     delete_expired_buses(db)  # <--- Clean up before searching
 
@@ -65,7 +65,7 @@ def search_buses(search_data: schemas.BusSearch, db: Session = Depends(get_db)):
 
 
 # --- ADMIN ROUTES ---
-@router.post("/", response_model=schemas.BusResponse, dependencies=[Depends(auth.get_admin_user)])
+@router.post("/", response_model=schemas.BusResponse, dependencies=[Depends(auth.get_admin_user)], summary="Add a new bus", description="**Admin Only:** Adds a new bus schedule to the system.")
 def add_bus(bus: schemas.BusCreate, db: Session = Depends(get_db)):
     new_bus = models.Bus(**bus.dict())
     db.add(new_bus)
@@ -74,7 +74,7 @@ def add_bus(bus: schemas.BusCreate, db: Session = Depends(get_db)):
     return new_bus
 
 
-@router.delete("/{bus_id}", dependencies=[Depends(auth.get_admin_user)])
+@router.delete("/{bus_id}", dependencies=[Depends(auth.get_admin_user)], summary="Delete a bus", description="**Admin Only:** Permanently removes a bus from the system by ID.")
 def delete_bus(bus_id: int, db: Session = Depends(get_db)):
     bus = db.query(models.Bus).filter(models.Bus.id == bus_id).first()
     if not bus:
@@ -84,7 +84,7 @@ def delete_bus(bus_id: int, db: Session = Depends(get_db)):
     return {"message": "Bus deleted successfully"}
 
 
-@router.put("/{bus_id}", response_model=schemas.BusResponse, dependencies=[Depends(auth.get_admin_user)])
+@router.put("/{bus_id}", response_model=schemas.BusResponse, dependencies=[Depends(auth.get_admin_user)], summary="Update bus details", description="**Admin Only:** Updates the details of an existing bus by ID.")
 def update_bus(bus_id: int, bus_update: schemas.BusCreate, db: Session = Depends(get_db)):
     bus = db.query(models.Bus).filter(models.Bus.id == bus_id).first()
     if not bus:

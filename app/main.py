@@ -12,7 +12,35 @@ from app.routers import buses, bookings, auth  # <-- Add auth here!
 # --- THIS COMMAND CREATES THE DATABASE FILE AUTOMATICALLY ---
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Bus Booking System")
+tags_metadata = [
+    {
+        "name": "Authentication",
+        "description": "Operations with users. The **login** logic is here.",
+    },
+    {
+        "name": "Buses",
+        "description": "Manage buses. Look up buses, as well as functions to add, update, and delete them (Admin only).",
+    },
+    {
+        "name": "Bookings",
+        "description": "Manage user bookings and retrieve taken seats for buses.",
+    },
+]
+
+app = FastAPI(
+    title="Maharashtra Bus Booking System API",
+    description="API Documentation for the Maharashtra Bus Booking System. Manage buses, make reservations, and handle user authentication easily via these documented endpoints.",
+    version="1.0.0",
+    contact={
+        "name": "Varad Gorhe",
+        "email": "varadgorhe2019@gmail.com",
+    },
+    license_info={
+        "name": "Apache 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+    },
+    openapi_tags=tags_metadata
+)
 
 from app.database import SessionLocal
 from app.models import User
@@ -136,3 +164,24 @@ def upgrade_admin(email: str):
         return {"error": "User not found. Make sure you signed up on the frontend first!"}
     finally:
         db.close()
+
+
+from app.models import User
+
+
+@app.get("/users/")
+def get_all_users(db: Session = Depends(get_db)):
+    # Fetch all users from the database
+    users = db.query(User).all()
+
+    # Return a safe list without the hashed passwords!
+    safe_users = []
+    for u in users:
+        safe_users.append({
+            "id": u.id,
+            "name": u.name,
+            "email": u.email,
+            "role": u.role
+        })
+
+    return safe_users

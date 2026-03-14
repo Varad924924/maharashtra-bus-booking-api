@@ -12,7 +12,7 @@ def get_db():
 # ==========================================
 # 1. CREATE BOOKING (REQUIRES USER LOGIN)
 # ==========================================
-@router.post("/", response_model=schemas.BookingResponse)
+@router.post("/", response_model=schemas.BookingResponse, summary="Create a new booking", description="Creates a booking for a specific seat on a bus. Automatically assigns the booking to the currently logged-in user.")
 def create_booking(booking: schemas.BookingCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
     # 1. Find the Bus
     bus = db.query(models.Bus).filter(models.Bus.id == booking.bus_id).first()
@@ -44,7 +44,7 @@ def create_booking(booking: schemas.BookingCreate, db: Session = Depends(get_db)
 # ==========================================
 # 2. VIEW ALL BOOKINGS (ADMIN ONLY!)
 # ==========================================
-@router.get("/", response_model=List[schemas.BookingResponse], dependencies=[Depends(auth.get_admin_user)])
+@router.get("/", response_model=List[schemas.BookingResponse], dependencies=[Depends(auth.get_admin_user)], summary="Get all bookings", description="**Admin Only:** Fetches every ticket in the system.")
 def get_all_bookings(db: Session = Depends(get_db)):
     """Fetches every ticket in the system. Only Admins can do this."""
     return db.query(models.Booking).all()
@@ -52,7 +52,7 @@ def get_all_bookings(db: Session = Depends(get_db)):
 # ==========================================
 # 3. VIEW MY BOOKINGS (FOR REGULAR USERS)
 # ==========================================
-@router.get("/my-bookings", response_model=List[schemas.BookingResponse])
+@router.get("/my-bookings", response_model=List[schemas.BookingResponse], summary="Get my active bookings", description="Fetches all tickets that belong to the logged-in user.")
 def get_my_bookings(db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
     """Fetches only the tickets that belong to the logged-in user."""
     return db.query(models.Booking).filter(models.Booking.user_id == current_user.id).all()
@@ -60,7 +60,7 @@ def get_my_bookings(db: Session = Depends(get_db), current_user: models.User = D
 # ==========================================
 # 4. GET BOOKED SEATS FOR A SPECIFIC BUS
 # ==========================================
-@router.get("/bus/{bus_id}", response_model=List[int])
+@router.get("/bus/{bus_id}", response_model=List[int], summary="Get taken seats for a bus", description="Public route to get a list of occupied seat numbers for a specific bus ID.")
 def get_booked_seats(bus_id: int, db: Session = Depends(get_db)):
     """Public route so the frontend grid knows which seats to color red."""
     bookings = db.query(models.Booking).filter(models.Booking.bus_id == bus_id).all()

@@ -70,7 +70,7 @@ def get_admin_user(current_user: models.User = Depends(get_current_user)):
 # ==========================================
 # 1. USER REGISTRATION (SIGNUP)
 # ==========================================
-@router.post("/signup", response_model=schemas.UserResponse)
+@router.post("/signup", response_model=schemas.UserResponse, summary="Register a new user", description="Creates a new user account if the email is not already registered. All new registrations will default to standard user role.")
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     # 1. Check if email is already taken
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
@@ -96,7 +96,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 # ==========================================
 # 2. USER LOGIN
 # ==========================================
-@router.post("/login")
+@router.post("/login", summary="Login and retrieve access token", description="Authenticates a user via email and password, returning a JWT token for use in secured routes. Please provide email in the username field.")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     # Note: FastAPI strictly expects 'username' in the form data, but we will pass the 'email' into it.
     user = db.query(models.User).filter(models.User.email == form_data.username).first()
